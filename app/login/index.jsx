@@ -32,9 +32,9 @@ export default function LoginScreen() {
         <Pressable
           style={{
             padding: 14,
-            marginTop: 100,
+            marginTop: 10,
             backgroundColor: Colors.PRIMARY,
-            wideth: "100%",
+            width: "100%",
             borderRadius: 14,
           }}
         >
