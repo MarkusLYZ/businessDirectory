@@ -1,8 +1,42 @@
 import { View, Text, Image, Pressable } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import Colors from "./../../constants/Colors";
+import * as WebBrowser from "expo-web-browser";
+import { useOAuth } from "@clerk/clerk-expo";
+import * as Linking from "expo-linking";
+
+export const useWarmUpBrowser = () => {
+  React.useEffect(() => {
+    // Warm up the android browser to improve UX
+    // https://docs.expo.dev/guides/authentication/#improving-user-experience
+    void WebBrowser.warmUpAsync();
+    return () => {
+      void WebBrowser.coolDownAsync();
+    };
+  }, []);
+};
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
+  useWarmUpBrowser();
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const onPress = useCallback(async () => {
+    try {
+      const { createdSessionId, signIn, signUp, setActive } =
+        await startOAuthFlow({
+          redirectUrl: Linking.createURL("/home", { scheme: "myapp" }),
+        });
+
+      if (createdSessionId) {
+      } else {
+        // Use signIn or signUp for next steps such as MFA
+      }
+    } catch (err) {
+      console.error("OAuth error", err);
+    }
+  }, []);
+
   return (
     <View style={{ backgroundColor: Colors.WHITE, height: "100%" }}>
       <Image
@@ -29,7 +63,7 @@ export default function LoginScreen() {
         >
           Let's adopt the pet which you like and make their lives happy again
         </Text>
-        <Pressable
+        <Pressable onPress={onPress}
           style={{
             padding: 14,
             marginTop: 10,
