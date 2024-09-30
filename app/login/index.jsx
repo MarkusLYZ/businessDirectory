@@ -25,7 +25,7 @@ export default function LoginScreen() {
     try {
       const { createdSessionId, signIn, signUp, setActive } =
         await startOAuthFlow({
-          redirectUrl: Linking.createURL("/home", { scheme: "myapp" }),
+          redirectUrl: Linking.createURL("/(tabs)/home", { scheme: "myapp" }),
         });
 
       if (createdSessionId) {
@@ -63,7 +63,8 @@ export default function LoginScreen() {
         >
           Let's adopt the pet which you like and make their lives happy again
         </Text>
-        <Pressable onPress={onPress}
+        <Pressable
+          onPress={onPress}
           style={{
             padding: 14,
             marginTop: 10,
