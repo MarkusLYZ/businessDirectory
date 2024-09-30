@@ -5,7 +5,7 @@ import { Pressable, Text, View } from "react-native";
 
 export default function Index() {
   const { user } = useUser();
-  console.log(user);
+  // console.log(user);
   const rootNavigationState = useRootNavigationState();
   useEffect(() => {
     CheckNavLoaded();
