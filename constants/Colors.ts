@@ -3,5 +3,5 @@ export default{
   LIGHT_PRIMARY: '#FFFFC5',
   GRAY:'#8F8e8d',
   WHITE:'#fff',
-
+  SECONDARY: '#ADD8E6'
 }

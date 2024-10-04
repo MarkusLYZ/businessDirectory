@@ -6,6 +6,7 @@ import Colors from "../../constants/Colors";
 
 export default function Category() {
   const [categoryList, setCategoryList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Dogs");
   useEffect(() => {
     GetCategories();
   }, []);
@@ -31,7 +32,13 @@ export default function Category() {
         numColumns={4}
         renderItem={({ item, index }) => (
           <View style={{ flex: 1 }}>
-            <View style={styles.container}>
+            <View
+              style={[
+                styles.container,
+                selectedCategory == item.name &&
+                  styles.selectedCategoryContainer,
+              ]}
+            >
               <Image
                 source={{ uri: item?.imageUrl }}
                 style={{ width: 40, height: 40 }}
@@ -56,5 +63,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: Colors.PRIMARY,
     margin: 5,
+  },
+  selectedCategoryContainer: {
+    backgroundColor: Colors.SECONDARY,
+    borderColor: Colors.SECONDARY,
   },
 });
