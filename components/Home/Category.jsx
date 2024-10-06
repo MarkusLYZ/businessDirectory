@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./../../config/FirebaseConfig";
 import Colors from "../../constants/Colors";
+import { TouchableOpacity } from "react-native";
 
 export default function Category() {
   const [categoryList, setCategoryList] = useState([]);
@@ -31,7 +32,7 @@ export default function Category() {
         data={categoryList}
         numColumns={4}
         renderItem={({ item, index }) => (
-          <View style={{ flex: 1 }}>
+          <TouchableOpacity onPress={()=>setSelectedCategory(item.name)} style={{ flex: 1 }}>
             <View
               style={[
                 styles.container,
@@ -47,7 +48,7 @@ export default function Category() {
             <Text style={{ textAlign: "center", fontFamily: "outfit" }}>
               {item?.name}
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
