@@ -7,7 +7,7 @@ import PetListItem from "./PetListItem";
 
 export default function PetListByCategory() {
   const [petList, setPetList] = useState([]);
-  const [loader, setLoader] = useState([]);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     GetPetList("Dogs");
   }, []);
