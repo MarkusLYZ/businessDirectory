@@ -24,7 +24,7 @@ export default function Category({category}) {
     }
   };
   return (
-    <View style={{ marginTop: 20 }}>
+    <View style={{ marginTop: 10 }}>
       <Text style={{ fontFamily: "outfit-medium", fontSize: 20 }}>
         Category
       </Text>

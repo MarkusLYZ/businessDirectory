@@ -7,14 +7,17 @@ export default function Index() {
   const { user } = useUser();
   // console.log(user);
   const rootNavigationState = useRootNavigationState();
-  useEffect(() => {
-    CheckNavLoaded();
-  }, []);
   const CheckNavLoaded = () => {
-    if (!rootNavigationState.key) {
-      return null;
+    if (!rootNavigationState || !rootNavigationState.key) {
+      return null; // Avoid accessing properties if rootNavigationState is undefined
     }
   };
+
+  useEffect(() => {
+    if (rootNavigationState) {
+      CheckNavLoaded();
+    }
+  }, [rootNavigationState]);
 
   return (
     <View

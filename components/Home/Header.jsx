@@ -21,7 +21,7 @@ export default function Header() {
       </View>
       <Image
         source={{ uri: user?.imageUrl }}
-        style={{ width: 40, height: 40, borderRadius: 99 }}
+        style={{ width: 40, height: 35, borderRadius: 90 }}
       />
       <StatusBar backgroundColor="black" barStyle="light-content" />
     </View>

@@ -1,4 +1,4 @@
-import { View, Text, Alert, ScrollView, StyleSheet } from "react-native";
+import { View, Text, Alert, StyleSheet,TouchableOpacity, FlatList } from "react-native";
 import React, { useEffect } from "react";
 import { BackHandler } from "react-native";
 import Header from "../../components/Home/Header";
@@ -33,7 +33,6 @@ export default function home() {
   );
 
   return (
-    <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
       <View style={{ padding: 20, marginTop: 20 }}>
         <Header />
         <Slider />
@@ -50,8 +49,7 @@ export default function home() {
             Add New Pet
           </Text>
         </TouchableOpacity>
-      </View>
-    </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
@@ -60,7 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
-    padding: 20,
+    padding: 15,
     marginTop: 20,
     backgroundColor: Colors.LIGHT_PRIMARY,
     borderWidth: 1,
