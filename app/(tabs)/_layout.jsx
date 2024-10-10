@@ -20,7 +20,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="favorite"
         options={{
-          title: "Home",
+          title: "Favorite",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="heart" size={24} color={color} />
@@ -30,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="inbox"
         options={{
-          title: "Home",
+          title: "Inbox",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="chatbubble" size={24} color={color} />
@@ -40,7 +40,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Home",
+          title: "Profile",
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons name="people-circle" size={24} color={color} />
