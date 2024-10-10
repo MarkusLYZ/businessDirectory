@@ -8,7 +8,7 @@ export default function PetInfo({ pet }) {
     <View>
       <Image
         source={{ uri: pet.imageUrl }}
-        style={{ width: "100%", height: 400, objectFit: "cover" }}
+        style={{ width: "100%", height: 350, objectFit: "cover" }}
       ></Image>
       <View
         style={{
