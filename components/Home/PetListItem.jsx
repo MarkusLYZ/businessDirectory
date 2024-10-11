@@ -15,27 +15,31 @@ export default function PetListItem({ pet }) {
         })
       }
       style={{
+        height:200,
+        width:155,
         padding: 10,
-        marginRight: 15,
+        marginRight: 10,
         backgroundColor: Colors.WHITE,
         borderRadius: 10,
       }}
     >
       <View style={{ position: "absolute", zIndex: 10, right: 10, top: 10 }}>
-        <MarkFav pet={pet} color="white"/>
+        <MarkFav pet={pet} color="white" />
       </View>
       <Image
         source={{ uri: pet?.imageUrl }}
         style={{
-          width: 150,
+          width: 135,
           height: 135,
           objectFit: "cover",
           borderRadius: 10,
         }}
       />
+      {/* Pet name */}
       <Text style={{ fontFamily: "outfit-medium", fontSize: 18 }}>
         {pet.name}
       </Text>
+      {/* Breed + age*/}
       <View
         style={{
           display: "flex",

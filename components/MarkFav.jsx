@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Shared from "./../Shared/Shared";
 import { useUser } from "@clerk/clerk-expo";
 
-export default function MarkFav({ pet, color='black' }) {
+export default function MarkFav({ pet, color = "black" }) {
   const { user } = useUser();
   const [favList, setFavList] = useState([]);
   useEffect(() => {
@@ -21,7 +21,6 @@ export default function MarkFav({ pet, color='black' }) {
 
       if (!favResult.includes(pet.id)) {
         favResult.push(pet.id); // Only push valid IDs
-        console.log(favResult); // Log updated favorites list
         await Shared.UpdateFav(user, favResult);
         GetFav(); // Refresh favorites list
       }

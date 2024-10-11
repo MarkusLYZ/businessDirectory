@@ -27,7 +27,7 @@ export default function PetListByCategory() {
 
       <FlatList
         data={petList}
-        style={{ marginTop: 10 }}
+        style={{ marginTop: 10}}
         horizontal
         refreshing={loader}
         onRefresh={() => GetPetList("Dogs")}
