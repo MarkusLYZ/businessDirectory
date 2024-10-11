@@ -7,6 +7,7 @@ import Colors from "../../constants/Colors";
 import PetListByCategory from "../../components/Home/PetListByCategory";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Link } from "expo-router";
 
 export default function home() {
   const navigation = useNavigation();
@@ -37,8 +38,8 @@ export default function home() {
         <Header />
         <Slider />
         <PetListByCategory />
-        <TouchableOpacity style={styles.addNewPetContainer}>
-          <MaterialIcons name="pets" size={24} color="black" />
+        <Link href={'/add-new-pet'} style={styles.addNewPetContainer}>
+          <MaterialIcons name="pets" size={24} color={Colors.PRIMARY} />
           <Text
             style={{
               fontFamily: "outfit-medium",
@@ -48,7 +49,7 @@ export default function home() {
           >
             Add New Pet
           </Text>
-        </TouchableOpacity>
+        </Link>
     </View>
   );
 }
@@ -58,12 +59,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
-    padding: 15,
+    padding: 10,
     marginTop: 20,
     backgroundColor: Colors.LIGHT_PRIMARY,
     borderWidth: 1,
     borderColor: Colors.PRIMARY,
     borderStyle: "dashed",
-    justifyContent: "center",
+    justifyContent:'center',
+    textAlign:'center'
   },
 });
