@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
@@ -13,6 +14,7 @@ import Colors from "../../constants/Colors";
 import { Picker } from "@react-native-picker/picker";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../config/FirebaseConfig";
+import * as ImagePicker from "expo-image-picker";
 
 export default function AddNewPet() {
   const navigation = useNavigation();
@@ -20,6 +22,7 @@ export default function AddNewPet() {
   const [gender, setGender] = useState();
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Dogs");
+  const [image, setImage] = useState();
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Add New Pet",
@@ -38,6 +41,20 @@ export default function AddNewPet() {
       console.error("Error fetching categories:", error);
     }
   };
+  const imagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
   const handleInputChange = (fieldName, fieldValue) => {
     setFormData((prev) => ({
       ...prev,
@@ -52,29 +69,31 @@ export default function AddNewPet() {
       <Text style={{ fontFamily: "outfit-medium", fontSize: 20 }}>
         Add New Pet for Adoption
       </Text>
-      <View
-        style={{
-          width: 90,
-          height: 90,
-          padding: 15,
-          borderRadius: 15,
-          borderWidth: 2,
-          borderColor: Colors.GRAY,
-          overflow: "hidden",
-          alignItems: "center",
-          justifyContent: "center",
-          marginVertical: 10,
-        }}
-      >
-        <Image
+      <Pressable onPress={imagePicker}>
+        <View
           style={{
-            width: "70%",
-            height: "70%",
+            width: 90,
+            height: 90,
+            padding: 15,
             borderRadius: 15,
+            borderWidth: 2,
+            borderColor: Colors.GRAY,
+            overflow: "hidden",
+            alignItems: "center",
+            justifyContent: "center",
+            marginVertical: 10,
           }}
-          source={require("./../../assets/images/placeholder.jpg")}
-        />
-      </View>
+        >
+          <Image
+            style={{
+              width: "70%",
+              height: "70%",
+              borderRadius: 15,
+            }}
+            source={require("./../../assets/images/placeholder.jpg")}
+          />
+        </View>
+      </Pressable>
       {/* Pet Name Input */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Pet Name *</Text>
