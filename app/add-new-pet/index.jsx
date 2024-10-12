@@ -7,19 +7,45 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
 import Colors from "../../constants/Colors";
+import { Picker } from "@react-native-picker/picker";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../config/FirebaseConfig";
 
 export default function AddNewPet() {
   const navigation = useNavigation();
+  const [formData, setFormData] = useState();
+  const [gender, setGender] = useState();
+  const [categoryList, setCategoryList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Dogs");
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Add New Pet",
     });
+    GetCategories();
   }, []);
+  const GetCategories = async () => {
+    try {
+      setCategoryList([]);
+      const snapshot = await getDocs(collection(db, "Category"));
+      snapshot.forEach((doc) => {
+        //   console.log(doc.data());
+        setCategoryList((categoryList) => [...categoryList, doc.data()]);
+      });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   const handleInputChange = (fieldName, fieldValue) => {
-    console.log(fieldName, fieldValue);
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: fieldValue,
+    }));
+  };
+  const onSubmit = () => {
+    console.log(formData);
   };
   return (
     <ScrollView style={{ padding: 20 }}>
@@ -57,6 +83,26 @@ export default function AddNewPet() {
           onChangeText={(value) => handleInputChange("name", value)}
         />
       </View>
+      {/* Category Input */}
+      <View>
+        <Text style={styles.label}>Pet Category *</Text>
+        <Picker
+          style={styles.input}
+          selectedValue={selectedCategory}
+          onValueChange={(itemValue, itemIndex) => {
+            setSelectedCategory(itemValue),
+              handleInputChange("category", itemValue);
+          }}
+        >
+          {categoryList.map((category, index) => (
+            <Picker.Item
+              key={index}
+              label={category.name}
+              value={category.name}
+            />
+          ))}
+        </Picker>
+      </View>
       {/* Breed Input */}
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Breed *</Text>
@@ -72,6 +118,20 @@ export default function AddNewPet() {
           style={styles.input}
           onChangeText={(value) => handleInputChange("age", value)}
         />
+      </View>
+      {/* Gender Picker */}
+      <View>
+        <Text style={styles.label}>Gender *</Text>
+        <Picker
+          style={styles.input}
+          selectedValue={gender}
+          onValueChange={(itemValue, itemIndex) => {
+            setGender(itemValue), handleInputChange("sex", itemValue);
+          }}
+        >
+          <Picker.Item label="Male" value="Male" />
+          <Picker.Item label="Female" value="Female" />
+        </Picker>
       </View>
       {/* Weight Input */}
       <View style={styles.inputContainer}>
@@ -100,7 +160,7 @@ export default function AddNewPet() {
         />
       </View>
       {/* Submit Button */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={onSubmit} style={styles.button}>
         <Text
           style={{
             fontFamily: "outfit-medium",
