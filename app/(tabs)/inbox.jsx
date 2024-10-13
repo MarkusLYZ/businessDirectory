@@ -39,8 +39,6 @@ export default function Inbox() {
         docId: record.id,
         ...otherUser[0],
       };
-      console.log(otherUser[0]);
-      
       list.push(result);
     });
     return list;
