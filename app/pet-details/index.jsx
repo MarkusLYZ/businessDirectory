@@ -34,7 +34,7 @@ export default function PetDetails() {
       headerTitle: "",
     });
   }, []);
-  const InitiateChat = async () => {    
+  const InitiateChat = async () => {
     const docId1 = user?.primaryEmailAddress?.emailAddress + "_" + pet?.email;
     const docId2 = pet?.email + "_" + user?.primaryEmailAddress?.emailAddress;
     const q = query(
@@ -63,6 +63,7 @@ export default function PetDetails() {
             name: pet?.username,
           },
         ],
+        userIds: [user?.primaryEmailAddress?.emailAddress, pet?.email],
       });
       router.push({
         pathname: "/chat",

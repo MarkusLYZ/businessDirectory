@@ -41,7 +41,6 @@ export default function ChatScreen() {
       otherUser = result.users.filter(
         (item) => item.email != user?.primaryEmailAddress?.emailAddress
       );
-      console.log(otherUser);
     } else {
       console.error("'users' field is either undefined or not an array");
     }
