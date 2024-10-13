@@ -7,22 +7,29 @@ import {
   ScrollView,
   TouchableOpacity,
   Pressable,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import Colors from "../../constants/Colors";
 import { Picker } from "@react-native-picker/picker";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../config/FirebaseConfig";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../../config/FirebaseConfig";
 import * as ImagePicker from "expo-image-picker";
+import { useUser } from "@clerk/clerk-expo";
 
 export default function AddNewPet() {
   const navigation = useNavigation();
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({ category: "Dogs", sex: "Male" });
   const [gender, setGender] = useState();
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Dogs");
   const [image, setImage] = useState();
+  const [loader, setLoader] = useState(false);
+  const { user } = useUser();
+  const router = useRouter();
   useEffect(() => {
     navigation.setOptions({
       headerTitle: "Add New Pet",
@@ -48,9 +55,6 @@ export default function AddNewPet() {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -62,7 +66,40 @@ export default function AddNewPet() {
     }));
   };
   const onSubmit = () => {
-    console.log(formData);
+    if (Object.keys(formData).length != 8) {
+      ToastAndroid.show("Enter All Details", ToastAndroid.SHORT);
+      return;
+    }
+    setLoader(true);
+    UploadImage();
+  };
+  // Function to upload to Firebase Stroage
+  const UploadImage = async () => {
+    const resp = await fetch(image);
+    const blobImage = await resp.blob();
+    const storageRef = ref(storage, "/petAdopt/" + Date.now() + ".jpg");
+    uploadBytes(storageRef, blobImage)
+      .then((snapshot) => {
+        console.log("File Uploaded");
+      })
+      .then((resp) => {
+        getDownloadURL(storageRef).then(async (downloadUrl) => {
+          SaveFormData(downloadUrl);
+        });
+      });
+  };
+  const SaveFormData = async (imageUrl) => {
+    const docId = Date.now().toString();
+    await setDoc(doc(db, "Pets", docId), {
+      ...formData,
+      imageUrl: imageUrl,
+      username: user?.fullName,
+      email: user?.primaryEmailAddress?.emailAddress,
+      userImage: user?.imageUrl,
+      id: docId,
+    });
+    setLoader(false);
+    router.replace("/(tabs)/home");
   };
   return (
     <ScrollView style={{ padding: 20 }}>
@@ -84,14 +121,25 @@ export default function AddNewPet() {
             marginVertical: 10,
           }}
         >
-          <Image
-            style={{
-              width: "70%",
-              height: "70%",
-              borderRadius: 15,
-            }}
-            source={require("./../../assets/images/placeholder.jpg")}
-          />
+          {!image ? (
+            <Image
+              style={{
+                width: "70%",
+                height: "70%",
+                borderRadius: 15,
+              }}
+              source={require("./../../assets/images/placeholder.jpg")}
+            />
+          ) : (
+            <Image
+              style={{
+                width: "120%",
+                height: "120%",
+                borderRadius: 15,
+              }}
+              source={{ uri: image }}
+            />
+          )}
         </View>
       </Pressable>
       {/* Pet Name Input */}
@@ -135,6 +183,7 @@ export default function AddNewPet() {
         <Text style={styles.label}>Age *</Text>
         <TextInput
           style={styles.input}
+          keyboardType="number-pad"
           onChangeText={(value) => handleInputChange("age", value)}
         />
       </View>
@@ -157,6 +206,7 @@ export default function AddNewPet() {
         <Text style={styles.label}>Weight *</Text>
         <TextInput
           style={styles.input}
+          keyboardType="number-pad"
           onChangeText={(value) => handleInputChange("weight", value)}
         />
       </View>
@@ -179,16 +229,24 @@ export default function AddNewPet() {
         />
       </View>
       {/* Submit Button */}
-      <TouchableOpacity onPress={onSubmit} style={styles.button}>
-        <Text
-          style={{
-            fontFamily: "outfit-medium",
-            textAlign: "center",
-            fontSize: 20,
-          }}
-        >
-          Submit
-        </Text>
+      <TouchableOpacity
+        onPress={onSubmit}
+        style={styles.button}
+        disabled={loader}
+      >
+        {loader ? (
+          <ActivityIndicator size={"large"} />
+        ) : (
+          <Text
+            style={{
+              fontFamily: "outfit-medium",
+              textAlign: "center",
+              fontSize: 20,
+            }}
+          >
+            Submit
+          </Text>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );
